@@ -1336,7 +1336,7 @@ function newGame() {
     level: 1, lines: 0, moves: 0, combo: 0, comboMiss: 0, tokens: 2, hints: 3,
     effects: { mirror: 0, fog: 0, blind: 0, wind: 0 }, windDir: DIRS[3],
     nextMut: null, lastMut: null, mutIn: 5, mutCount: 0,
-    locked: false, over: false,
+    locked: false, over: false, revives: 0,
   };
   shownScore = 0; $('score').textContent = '0';
   particles = []; popups = []; clearing = []; boardAnim = null; drag = pending = null; shake = 0; hint = null;
@@ -1363,6 +1363,48 @@ function start() {
   $('overlay').hidden = true;
   newGame();
 }
+
+// Hồi sinh: dọn chướng ngại rồi xóa dần các hàng/cột đầy nhất cho tới khi khay mới chắc chắn còn đường đi
+function revive() {
+  const b = S.board;
+  S.over = false;
+  S.locked = false;
+  S.revives++;
+  eachCell((x, y, c) => { if (c && c.type !== 'block') { b.cells[y][x] = null; spawnSparks(x, y, colorOf(c), 4); } });
+  S.effects = { mirror: 0, fog: 0, blind: 0, wind: 0 };
+  for (let k = 0; k < 40; k++) {
+    refillTray();
+    if (listCells(c => !c).length >= 16 && trayPath(4000, true).path) break;
+    clearFullestLine();
+  }
+  S.mutIn = Math.max(S.mutIn, 3);
+  $('overlay').hidden = true;
+  shake = 10;
+  sfx.level();
+  addPopup('HỒI SINH!', '#06d6a0', 40, W / 2, by + (b.h * cs) / 2);
+  refresh();
+}
+
+function clearFullestLine() {
+  const b = S.board;
+  let best = null, bestN = 0;
+  for (let y = 0; y < b.h; y++) {
+    const n = b.cells[y].filter(Boolean).length;
+    if (n > bestN) { bestN = n; best = Array.from({ length: b.w }, (_, x) => [x, y]); }
+  }
+  for (let x = 0; x < b.w; x++) {
+    const n = b.cells.filter(r => r[x]).length;
+    if (n > bestN) { bestN = n; best = Array.from({ length: b.h }, (_, y) => [x, y]); }
+  }
+  for (const [x, y] of best || []) {
+    const c = b.cells[y][x];
+    if (!c) continue;
+    b.cells[y][x] = null;
+    clearing.push({ x, y, color: colorOf(c), t0: now });
+  }
+}
+
+Revive.mount($('revive'), revive);
 
 $('hintBtn').addEventListener('click', useHint);
 $('startBtn').addEventListener('click', start);

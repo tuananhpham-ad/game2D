@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Gạch Biến Dị</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/arcade.css">
+  <style>
+    .lives { color: var(--danger); letter-spacing: -.05em; }
+    .next .bar { width: 64px; height: 6px; margin: 0 0 0 auto; flex: none; }
+    .next .cnt { margin-left: 8px; min-width: 30px; text-align: right; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <header class="hud">
+      <div class="stat"><span class="lbl">Điểm</span><span class="val" id="score">0</span></div>
+      <div class="stat"><span class="lbl">Kỷ lục</span><span class="val" id="best">0</span></div>
+      <div class="stat"><span class="lbl">Màn</span><span class="val" id="level">1</span></div>
+      <div class="stat"><span class="lbl">Mạng</span><span class="val lives" id="lives">♥♥♥</span></div>
+      <div class="btns">
+        <button id="pauseBtn" aria-label="Tạm dừng">⏸</button>
+        <button id="muteBtn" aria-label="Bật/tắt âm thanh">🔊</button>
+      </div>
+    </header>
+
+    <div class="status">
+      <div id="next" class="next"></div>
+      <div id="effects" class="effects"></div>
+    </div>
+
+    <div class="stage">
+      <canvas id="cv"></canvas>
+
+      <div id="banner" class="banner">
+        <div class="b-tag"></div>
+        <div class="b-icon"></div>
+        <div class="b-name"></div>
+        <div class="b-desc"></div>
+        <div class="b-detail"></div>
+      </div>
+
+      <div id="overlay" class="overlay">
+        <div id="startCard" class="card">
+          <h1>GẠCH <span>BIẾN DỊ</span></h1>
+          <p class="sub">Phá gạch… nhưng gạch biết chạy, biết tách đôi và biết bắn trả.</p>
+          <ul class="rules">
+            <li>Rê chuột / kéo ngón tay (hoặc phím ← →) để điều khiển thanh đỡ. <b>Chạm / Space</b> để phóng bóng.</li>
+            <li>Cứ vài giây lại có <b>ĐỘT BIẾN</b>: trọng lực lệch, thanh đỡ co lại, gạch tiến công…</li>
+            <li>Gạch <b>pháo</b> bắn trả — trúng đạn thì thanh đỡ ngắn dần. Gạch xuống tới vạch đỏ là mất mạng.</li>
+            <li>Hứng vật phẩm rơi ra: <b>W</b> nới rộng, <b>×3</b> nhân bóng, <b>S</b> làm chậm, <b>♥</b> thêm mạng.</li>
+          </ul>
+          <div id="mutList" class="mut-list"></div>
+          <button id="startBtn" class="big">CHƠI</button>
+          <a class="home" href="../">← Về sảnh game</a>
+        </div>
+
+        <div id="pauseCard" class="card" hidden>
+          <h1>TẠM DỪNG</h1>
+          <div class="row">
+            <button id="resumeBtn" class="big">TIẾP TỤC</button>
+            <button id="restartBtn" class="big ghost">CHƠI LẠI</button>
+          </div>
+          <a class="home" href="../">← Về sảnh game</a>
+        </div>
+
+        <div id="overCard" class="card" hidden>
+          <h1 class="over">TOANG RỒI!</h1>
+          <p class="sub" id="overReason">Hết mạng.</p>
+          <div class="final"><span id="finalScore">0</span><small id="newBest" hidden>KỶ LỤC MỚI!</small></div>
+          <div class="stats">
+            <div><b id="stLevel">1</b><span>màn</span></div>
+            <div><b id="stBricks">0</b><span>gạch vỡ</span></div>
+            <div><b id="stMuts">0</b><span>đột biến</span></div>
+            <div><b id="stTime">0</b><span>giây</span></div>
+          </div>
+          <div id="revive"></div>
+          <button id="againBtn" class="big">CHƠI LẠI</button>
+          <a class="home" href="../">← Về sảnh game</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="../shared/sound.js"></script>
+  <script src="../shared/revive.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

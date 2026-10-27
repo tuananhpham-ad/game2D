@@ -6,8 +6,14 @@ Sảnh game 2D chạy thuần trên trình duyệt (HTML/CSS/JS, không cần bu
 public/
   index.html          ← dashboard chọn game
   blockblast/         ← Block Chaos (xếp khối siêu khó với đột biến)
+  brick/              ← Gạch Biến Dị (phá gạch)
+  merge/              ← Số Biến Hình (ghép số)
+  shared/             ← CSS giao diện chung, âm thanh, mã hồi sinh
 render.yaml           ← cấu hình deploy Render (static site)
 ```
+
+Khi thua, nhập mã hồi sinh trong màn "Toang rồi" để chơi tiếp
+(mã chỉ được lưu dưới dạng băm trong `shared/revive.js`).
 
 ## Chạy thử trên máy
 

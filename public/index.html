@@ -134,8 +134,27 @@
         desc: 'Xếp khối siêu khó với 15 đột biến: động đất, xoay bàn, lật gương, đổi sơ đồ, bom hẹn giờ, sương mù… Luôn có đường thoát — thua là do nước đi.',
         tags: ['Giải đố', 'Siêu khó'],
         bestKey: 'bc_best',
-        badge: 'MỚI',
         thumb: 'blocks',
+      },
+      {
+        id: 'brick',
+        title: 'Gạch Biến Dị',
+        url: 'brick/',
+        desc: 'Phá gạch bằng thanh đỡ — nhưng gạch biết chạy, tách đôi và bắn trả. Trọng lực lệch hướng, thanh đỡ co lại, cả đàn gạch tiến công.',
+        tags: ['Hành động', 'Siêu khó'],
+        bestKey: 'bk_best',
+        badge: 'MỚI',
+        thumb: 'brick',
+      },
+      {
+        id: 'merge',
+        title: 'Số Biến Hình',
+        url: 'merge/',
+        desc: 'Ghép số trên bàn chơi liên tục đổi hình dạng. Ô đóng băng, bom hẹn giờ, đá chắn và những lúc hướng vuốt bị hoán đổi.',
+        tags: ['Giải đố', 'Ghép số'],
+        bestKey: 'mg_best',
+        badge: 'MỚI',
+        thumb: 'merge',
       },
     ];
 
@@ -169,6 +188,48 @@
             s += `<rect x="${X}" y="${Y}" width="10" height="10" rx="2" fill="${c}"/><rect x="${X + 1.5}" y="${Y + 1}" width="7" height="2" rx="1" fill="#ffffff55"/>`;
           }
         }));
+        return `<svg viewBox="0 0 96 96" aria-hidden="true">${s}</svg>`;
+      },
+
+      // Sân phá gạch: vài hàng gạch, đường bay cong của bóng, thanh đỡ
+      brick() {
+        const C = ['#4cc9f0', '#06d6a0', '#ffb703', '#ff4d6d'];
+        let s = '<rect x="0" y="0" width="120" height="96" rx="8" fill="#0f1226"/>';
+        for (let r = 0; r < 4; r++) for (let c = 0; c < 8; c++) {
+          if ((r === 2 && (c === 2 || c === 5)) || (r === 3 && c % 3 === 1)) continue;
+          const x = 4 + c * 14, y = 8 + r * 8;
+          const fill = r === 1 && c === 6 ? '#b5179e' : r === 0 && c === 3 ? '#8d99ae' : C[r];
+          s += `<rect x="${x}" y="${y}" width="12" height="6" rx="1.5" fill="${fill}"/>`;
+          if (r === 3 && c === 4) s += `<line x1="${x + 6}" y1="${y + 1}" x2="${x + 6}" y2="${y + 5}" stroke="#10121f" stroke-dasharray="1.5 1"/>`;
+        }
+        s += '<path d="M60 82 Q 38 64 46 52 T 70 44" fill="none" stroke="#4cc9f0" stroke-width="1.2" stroke-dasharray="2 2" opacity=".7"/>';
+        s += '<circle cx="70" cy="44" r="3" fill="#fff"/>';
+        s += '<rect x="96" y="40" width="2" height="5" rx="1" fill="#ff5ec4"/>';
+        s += '<line x1="0" y1="76" x2="120" y2="76" stroke="#ff4d6d" stroke-dasharray="4 3" opacity=".6"/>';
+        s += '<rect x="44" y="84" width="32" height="5" rx="2.5" fill="#e8ecff"/>';
+        return `<svg viewBox="0 0 120 96" aria-hidden="true">${s}</svg>`;
+      },
+
+      // Bàn ghép số hình chữ thập, có ô băng và bom
+      merge() {
+        const cells = [
+          [1, 0, 2], [2, 0, 4], [0, 1, 8], [1, 1, 64], [2, 1, 2], [3, 1, 16],
+          [0, 2, 'B'], [1, 2, 128], [2, 2, 256], [3, 2, 4], [1, 3, 2], [2, 3, 'I'],
+        ];
+        const color = v => ({ 2: '#4cc9f0', 4: '#4895ef', 8: '#06d6a0', 16: '#80ed99', 64: '#ffb703', 128: '#f77f00', 256: '#ff4d6d' }[v]);
+        let s = '';
+        for (const [x, y, v] of cells) {
+          const X = 4 + x * 22, Y = 4 + y * 22;
+          if (v === 'B') {
+            s += `<rect x="${X}" y="${Y}" width="20" height="20" rx="4" fill="#1a1c2e"/><circle cx="${X + 10}" cy="${Y + 11}" r="6" fill="#e0234a"/>`;
+          } else if (v === 'I') {
+            s += `<rect x="${X}" y="${Y}" width="20" height="20" rx="4" fill="#ff5ec4"/><rect x="${X}" y="${Y}" width="20" height="20" rx="4" fill="#bde0fe" fill-opacity=".6" stroke="#fff"/>` +
+              `<text x="${X + 10}" y="${Y + 14}" text-anchor="middle" font-size="9" font-weight="800" fill="#1d3557" font-family="system-ui">512</text>`;
+          } else {
+            s += `<rect x="${X}" y="${Y}" width="20" height="20" rx="4" fill="${color(v)}"/>` +
+              `<text x="${X + 10}" y="${Y + 14}" text-anchor="middle" font-size="${v > 99 ? 8 : 10}" font-weight="800" fill="${v <= 64 ? '#10121f' : '#fff'}" font-family="system-ui">${v}</text>`;
+          }
+        }
         return `<svg viewBox="0 0 96 96" aria-hidden="true">${s}</svg>`;
       },
     };
