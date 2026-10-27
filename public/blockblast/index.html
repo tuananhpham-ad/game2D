@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Block Chaos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="hud">
+      <div class="stat"><span class="lbl">Điểm</span><span class="val" id="score">0</span></div>
+      <div class="stat"><span class="lbl">Kỷ lục</span><span class="val" id="best">0</span></div>
+      <div class="stat">
+        <span class="lbl">Cấp</span><span class="val" id="level">1</span>
+        <div class="bar"><i id="levelBar"></i></div>
+      </div>
+      <div class="stat" title="Chạm vào khối trong khay để xoay (phím R khi đang kéo)">
+        <span class="lbl">Lượt xoay</span><span class="val" id="tokens">2</span>
+      </div>
+      <button class="stat hint" id="hintBtn" title="Chỉ ra một nước đi chắc chắn còn đường thoát">
+        <span class="lbl">💡 Gợi ý</span><span class="val" id="hints">3</span>
+      </button>
+      <div class="btns">
+        <button id="muteBtn" aria-label="Bật/tắt âm thanh">🔊</button>
+        <button id="restartBtn" aria-label="Chơi lại">↻</button>
+      </div>
+    </header>
+
+    <div class="status">
+      <div id="next" class="next"></div>
+      <div id="effects" class="effects"></div>
+    </div>
+
+    <div class="stage">
+      <canvas id="cv"></canvas>
+
+      <div id="banner" class="banner">
+        <div class="b-tag"></div>
+        <div class="b-icon"></div>
+        <div class="b-name"></div>
+        <div class="b-desc"></div>
+        <div class="b-detail"></div>
+      </div>
+
+      <div id="overlay" class="overlay">
+        <div id="startCard" class="card">
+          <h1>BLOCK <span>CHAOS</span></h1>
+          <p class="sub">Xếp khối… nhưng bàn chơi không chịu đứng yên.</p>
+          <ul class="rules">
+            <li>Kéo khối từ khay vào bàn. Lấp đầy <b>hàng ngang</b> hoặc <b>cột dọc</b> để xóa.</li>
+            <li>Cứ vài lượt lại có <b>ĐỘT BIẾN</b> — xem cảnh báo phía trên bàn.</li>
+            <li><b>Chạm</b> vào khối trong khay để xoay (tốn 1 lượt xoay, lên cấp được thêm).</li>
+            <li><b>Luôn có đường thoát:</b> mỗi khay và mỗi đột biến đều được kiểm chứng là vẫn còn cách đặt hết khối. Thua là do nước đi, không phải do xui. Bí thì bấm 💡.</li>
+            <li>Không còn chỗ đặt khối nào = <b>thua</b>.</li>
+          </ul>
+          <div id="mutList" class="mut-list"></div>
+          <button id="startBtn" class="big">CHƠI</button>
+          <a class="home" href="../">← Về sảnh game</a>
+        </div>
+
+        <div id="overCard" class="card" hidden>
+          <h1 class="over">TOANG RỒI!</h1>
+          <p class="sub" id="overReason">Không còn chỗ cho khối nào.</p>
+          <div class="final"><span id="finalScore">0</span><small id="newBest" hidden>KỶ LỤC MỚI!</small></div>
+          <div class="stats">
+            <div><b id="stLevel">1</b><span>cấp</span></div>
+            <div><b id="stLines">0</b><span>hàng xóa</span></div>
+            <div><b id="stMuts">0</b><span>đột biến</span></div>
+            <div><b id="stMoves">0</b><span>lượt</span></div>
+          </div>
+          <button id="againBtn" class="big">CHƠI LẠI</button>
+          <a class="home" href="../">← Về sảnh game</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="game.js"></script>
+</body>
+</html>

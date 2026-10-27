@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Game2D Arcade</title>
+  <meta name="description" content="Sảnh game 2D chơi ngay trên trình duyệt.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0d18;
+      --panel: #161a2e;
+      --panel-2: #1e2340;
+      --line: #ffffff14;
+      --text: #eef1ff;
+      --muted: #8a92b9;
+      --accent: #ffb703;
+      --danger: #ff4d6d;
+      --cyan: #4cc9f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      min-height: 100%;
+      background: radial-gradient(120% 70% at 50% 0%, #1b1f3d 0%, var(--bg) 60%);
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Baloo 2', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 28px 16px 48px; }
+
+    header { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+    .brand h1 { font-size: clamp(32px, 6vw, 48px); line-height: 1; letter-spacing: .03em; }
+    .brand h1 span { color: var(--danger); }
+    .brand p { color: var(--muted); margin-top: 6px; }
+
+    .tools { display: flex; gap: 8px; flex-wrap: wrap; }
+    .search {
+      background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+      color: var(--text); font: inherit; font-size: 15px;
+      padding: 7px 12px; width: 200px; max-width: 100%;
+    }
+    .search::placeholder { color: var(--muted); }
+    .filters { display: flex; gap: 6px; flex-wrap: wrap; }
+    .filters button {
+      border: 1px solid var(--line); background: var(--panel); color: var(--muted);
+      font: inherit; font-size: 14px; font-weight: 700;
+      padding: 5px 12px; border-radius: 999px; cursor: pointer;
+    }
+    .filters button[aria-pressed="true"] { background: var(--accent); color: #1a1200; border-color: transparent; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+
+    .card {
+      position: relative;
+      display: flex; flex-direction: column;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s;
+    }
+    a.card:hover, a.card:focus-visible { transform: translateY(-4px); border-color: #ffb70366; box-shadow: 0 14px 36px #000a; outline: none; }
+    .thumb {
+      aspect-ratio: 16 / 10;
+      display: grid; place-items: center;
+      background: radial-gradient(circle at 50% 40%, #262b52, #121528);
+      border-bottom: 1px solid var(--line);
+    }
+    .thumb svg { width: 62%; height: auto; filter: drop-shadow(0 8px 18px #0008); }
+    .body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .title { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+    .title h2 { font-size: 24px; line-height: 1.1; }
+    .best { font-size: 13px; color: var(--muted); white-space: nowrap; }
+    .best b { color: var(--accent); font-size: 15px; }
+    .desc { color: #cfd4f0; font-size: 15px; line-height: 1.45; }
+    .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tags span { font-size: 12px; font-weight: 700; padding: 1px 9px; border-radius: 999px; background: var(--panel-2); color: var(--cyan); }
+    .play {
+      margin-top: auto; align-self: flex-start;
+      padding: 6px 22px; border-radius: 12px;
+      font-weight: 800; letter-spacing: .08em; color: #1a1200;
+      background: linear-gradient(180deg, #ffd166, #ff9f1c);
+      box-shadow: 0 4px 0 #b86e00;
+    }
+    .badge {
+      position: absolute; top: 12px; left: 12px;
+      font-size: 12px; font-weight: 800; letter-spacing: .08em;
+      padding: 2px 10px; border-radius: 999px;
+      background: var(--danger); color: #fff;
+    }
+
+    .card.soon { border-style: dashed; opacity: .7; }
+    .card.soon .thumb { font-size: 56px; color: var(--muted); }
+    .card.soon .play { background: var(--panel-2); color: var(--muted); box-shadow: none; }
+
+    .empty { color: var(--muted); text-align: center; padding: 40px 0; grid-column: 1 / -1; }
+    footer { margin-top: 36px; color: var(--muted); font-size: 13px; text-align: center; }
+
+    @media (max-width: 480px) {
+      .wrap { padding-top: 20px; }
+      .search { width: 100%; }
+      .tools { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <h1>GAME2D <span>ARCADE</span></h1>
+        <p>Chọn một game và chơi ngay trên trình duyệt — điện thoại hay máy tính đều được.</p>
+      </div>
+      <div class="tools">
+        <input id="q" class="search" type="search" placeholder="Tìm game…" aria-label="Tìm game">
+        <div id="filters" class="filters" role="group" aria-label="Lọc theo thể loại"></div>
+      </div>
+    </header>
+
+    <main id="grid" class="grid"></main>
+    <footer>Kỷ lục được lưu trên trình duyệt của bạn.</footer>
+  </div>
+
+  <script>
+    // Danh sách game — thêm game mới chỉ cần thêm 1 mục vào đây
+    const GAMES = [
+      {
+        id: 'blockblast',
+        title: 'Block Chaos',
+        url: 'blockblast/',
+        desc: 'Xếp khối siêu khó với 15 đột biến: động đất, xoay bàn, lật gương, đổi sơ đồ, bom hẹn giờ, sương mù… Luôn có đường thoát — thua là do nước đi.',
+        tags: ['Giải đố', 'Siêu khó'],
+        bestKey: 'bc_best',
+        badge: 'MỚI',
+        thumb: 'blocks',
+      },
+    ];
+
+    const THUMBS = {
+      // Mini bàn 8×8 vẽ bằng SVG
+      blocks() {
+        const C = ['#ff4d6d', '#ffb703', '#06d6a0', '#4cc9f0', '#9d4edd', '#3a86ff'];
+        const map = [
+          '..11....',
+          '..1...44',
+          '22.3..4.',
+          '2233.55.',
+          '.6.3B55.',
+          '66666666',
+          '..x.4..1',
+          '.L..44.1',
+        ];
+        let s = '';
+        map.forEach((row, y) => [...row].forEach((ch, x) => {
+          const X = x * 12 + 1, Y = y * 12 + 1;
+          s += `<rect x="${X}" y="${Y}" width="10" height="10" rx="2" fill="#ffffff10"/>`;
+          if (ch === '.') return;
+          if (ch === 'B') {
+            s += `<rect x="${X}" y="${Y}" width="10" height="10" rx="2" fill="#2b2d42"/><circle cx="${X + 5}" cy="${Y + 5.5}" r="3.2" fill="#e0234a"/>`;
+          } else if (ch === 'L') {
+            s += `<rect x="${X}" y="${Y}" width="10" height="10" rx="2" fill="#11131f" stroke="#ff4d6d" stroke-width="1"/>`;
+          } else if (ch === 'x') {
+            s += `<rect x="${X}" y="${Y}" width="10" height="10" rx="2" fill="#9aa3b5"/>`;
+          } else {
+            const c = C[(+ch - 1) % C.length];
+            s += `<rect x="${X}" y="${Y}" width="10" height="10" rx="2" fill="${c}"/><rect x="${X + 1.5}" y="${Y + 1}" width="7" height="2" rx="1" fill="#ffffff55"/>`;
+          }
+        }));
+        return `<svg viewBox="0 0 96 96" aria-hidden="true">${s}</svg>`;
+      },
+    };
+
+    const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    function readBest(key) {
+      try { const v = JSON.parse(localStorage.getItem(key)); return typeof v === 'number' ? v : 0; } catch (e) { return 0; }
+    }
+
+    let activeTag = 'Tất cả';
+    const allTags = ['Tất cả', ...new Set(GAMES.flatMap(g => g.tags))];
+    const filtersEl = document.getElementById('filters');
+    filtersEl.innerHTML = allTags.map(t => `<button type="button" aria-pressed="${t === activeTag}">${esc(t)}</button>`).join('');
+    filtersEl.addEventListener('click', e => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      activeTag = b.textContent;
+      [...filtersEl.children].forEach(x => x.setAttribute('aria-pressed', x === b));
+      render();
+    });
+    document.getElementById('q').addEventListener('input', render);
+
+    function render() {
+      const q = document.getElementById('q').value.trim().toLowerCase();
+      const list = GAMES.filter(g =>
+        (activeTag === 'Tất cả' || g.tags.includes(activeTag)) &&
+        (!q || (g.title + ' ' + g.desc + ' ' + g.tags.join(' ')).toLowerCase().includes(q)));
+      const cards = list.map(g => {
+        const best = g.bestKey ? readBest(g.bestKey) : 0;
+        return `<a class="card" href="${esc(g.url)}">
+          ${g.badge ? `<span class="badge">${esc(g.badge)}</span>` : ''}
+          <div class="thumb">${THUMBS[g.thumb] ? THUMBS[g.thumb]() : ''}</div>
+          <div class="body">
+            <div class="title"><h2>${esc(g.title)}</h2>${best ? `<span class="best">Kỷ lục <b>${best}</b></span>` : ''}</div>
+            <p class="desc">${esc(g.desc)}</p>
+            <div class="tags">${g.tags.map(t => `<span>${esc(t)}</span>`).join('')}</div>
+            <span class="play">CHƠI ▸</span>
+          </div>
+        </a>`;
+      });
+      if (!q && activeTag === 'Tất cả') {
+        cards.push(`<div class="card soon"><div class="thumb">＋</div><div class="body">
+          <div class="title"><h2>Game tiếp theo</h2></div>
+          <p class="desc">Sắp ra mắt…</p><span class="play">SẮP CÓ</span></div></div>`);
+      }
+      document.getElementById('grid').innerHTML = cards.length ? cards.join('') : '<p class="empty">Không tìm thấy game nào.</p>';
+    }
+    render();
+  </script>
+</body>
+</html>
