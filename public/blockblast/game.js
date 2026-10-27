@@ -619,7 +619,7 @@ function pickMutation(exclude) {
 }
 
 function mutInterval() {
-  return Math.max(2, 6 - Math.floor((S.level - 1) / 2)) + rnd(2);
+  return 10 + rnd(6);   // ngẫu nhiên 10–15 lượt
 }
 
 function checkGameOver() {
@@ -1335,7 +1335,7 @@ function newGame() {
     score: 0, best: store.get('bc_best', 0), newBest: false,
     level: 1, lines: 0, moves: 0, combo: 0, comboMiss: 0, tokens: 2, hints: 3,
     effects: { mirror: 0, fog: 0, blind: 0, wind: 0 }, windDir: DIRS[3],
-    nextMut: null, lastMut: null, mutIn: 5, mutCount: 0,
+    nextMut: null, lastMut: null, mutIn: 10 + rnd(6), mutCount: 0,
     locked: false, over: false, revives: 0,
   };
   shownScore = 0; $('score').textContent = '0';

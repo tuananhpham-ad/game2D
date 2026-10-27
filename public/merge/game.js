@@ -91,7 +91,7 @@ function newGame() {
     score: 0, best: store.get('mg_best', 0), newBest: false,
     moves: 0, mutCount: 0, bombs: 0, maxTile: 2, level: 1, revives: 0,
     fx: { swap: 0 }, swapMap: SWAPS[0],
-    nextMut: null, lastMut: null, mutIn: 6, lockUntil: 0, boardT0: now,
+    nextMut: null, lastMut: null, mutIn: 10 + rnd(6), lockUntil: 0, boardT0: now,
     over: false,
   };
   ghosts = []; particles = []; popups = []; shake = 0; shownScore = 0;
@@ -401,7 +401,7 @@ function pickMut(exclude) {
 }
 
 function mutInterval() {
-  return Math.max(3, 6 - Math.floor(S.level / 2)) + rnd(2);
+  return 10 + rnd(6);   // ngẫu nhiên 10–15 lượt
 }
 
 function snapshot() {
